@@ -1,4 +1,4 @@
-﻿namespace KanbanApp.Requests
+﻿namespace KanbanApp.Requests.UserRequests
 {
     public class UserRegisterRequest
     {

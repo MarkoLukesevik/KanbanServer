@@ -1,7 +1,7 @@
 ﻿using KanbanApp.Database;
 using KanbanApp.Exceptions;
 using KanbanApp.Models;
-using KanbanApp.Requests;
+using KanbanApp.Requests.UserRequests;
 using KanbanApp.Responses;
 
 namespace KanbanApp.Services

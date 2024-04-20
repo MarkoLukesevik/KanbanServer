@@ -1,4 +1,4 @@
-﻿using KanbanApp.Requests;
+﻿using KanbanApp.Requests.BoardRequests;
 using KanbanApp.Services;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -50,6 +50,19 @@ namespace KanbanApp.Controllers
             }
 
             var result = _boardService.CreateBoard(createBoardRequest);
+            return Results.Ok(result);
+        }
+
+        [HttpPut]
+        [Route("editBoard")]
+        public IResult EditBoard([FromBody] EditBoardRequest editBoardRequest)
+        {
+            if (editBoardRequest == null)
+            {
+                throw new ArgumentException("request body cannot be empty");
+            }
+
+            var result = _boardService.EditBoard(editBoardRequest);
             return Results.Ok(result);
         }
     }

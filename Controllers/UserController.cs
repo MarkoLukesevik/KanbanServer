@@ -1,4 +1,4 @@
-﻿using KanbanApp.Requests;
+﻿using KanbanApp.Requests.UserRequests;
 using KanbanApp.Services;
 using Microsoft.AspNetCore.Mvc;
 
