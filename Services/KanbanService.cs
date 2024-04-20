@@ -1,5 +1,6 @@
 ﻿using KanbanApp.Database;
 using KanbanApp.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace KanbanApp.Services
 {
@@ -14,7 +15,7 @@ namespace KanbanApp.Services
 
         public List<Kanban> GetAllKanbans()
         {
-            var kanbans = _kanbanContext.Kanbans.Select(x => x).ToList();
+            var kanbans = _kanbanContext.Kanbans.Include(x => x.Boards).ToList();
             return kanbans;
         }
     }

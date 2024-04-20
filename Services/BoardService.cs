@@ -24,7 +24,11 @@ namespace KanbanApp.Services
 
         public Board GetBoardById(Guid boardId)
         {
-            var board = _kanbanContext.Boards.FirstOrDefault(x => x.Id == boardId);
+            var board = _kanbanContext.Boards
+                .Include(x => x.Columns)
+                .ThenInclude(x => x.Tasks)
+                .ThenInclude(x => x.Subtasks)
+                .FirstOrDefault(x => x.Id == boardId);
 
             if (board == null)
             {
@@ -36,7 +40,11 @@ namespace KanbanApp.Services
 
         public void DeleteBoardById(Guid boardId)
         {
-            var board = _kanbanContext.Boards.FirstOrDefault(x => x.Id == boardId);
+            var board = _kanbanContext.Boards
+                .Include(x => x.Columns)
+                .ThenInclude(x => x.Tasks)
+                .ThenInclude(x => x.Subtasks)
+                .FirstOrDefault(x => x.Id == boardId);
 
             if (board == null)
             {
@@ -49,7 +57,13 @@ namespace KanbanApp.Services
 
         public Board CreateBoard(CreateBoardRequest request)
         {
-            List<Column> columns = request.Columns.Select(x => new Column(x.Name)).ToList();
+            var kanban = _kanbanContext.Kanbans.FirstOrDefault(x => x.Id == request.KanbanId);
+            if (kanban == null)
+            {
+                throw new NotFoundException("Kanban with given kanbanId was not found.");
+            }
+
+            var columns = request.Columns.Select(x => new Column(x.Name)).ToList();
             var board = new Board
             {
                 KanbanId = request.KanbanId,
