@@ -49,8 +49,13 @@ namespace KanbanApp.Services
 
         public Board CreateBoard(CreateBoardRequest request)
         {
-            var boardColumns = request.Columns.Select(x => new Column(x.Name)).ToList();
-            var board = new Board(request.Name, request.KanbanId, boardColumns);
+            List<Column> columns = request.Columns.Select(x => new Column(x.Name)).ToList();
+            var board = new Board
+            {
+                KanbanId = request.KanbanId,
+                Name = request.Name,
+                Columns = columns,
+            };
 
             _kanbanContext.Boards.Add(board);
             _kanbanContext.SaveChanges();
