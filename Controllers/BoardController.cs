@@ -33,7 +33,7 @@ namespace KanbanApp.Controllers
         }
 
         [HttpDelete]
-        [Route("/board/{boardId}")]
+        [Route("/deleteBoard/{boardId}")]
         public IResult DeleteBoardById([FromRoute] Guid boardId)
         {
             _boardService.DeleteBoardById(boardId);

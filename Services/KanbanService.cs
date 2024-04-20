@@ -15,7 +15,7 @@ namespace KanbanApp.Services
 
         public List<Kanban> GetAllKanbans()
         {
-            var kanbans = _kanbanContext.Kanbans.Include(x => x.Boards).ToList();
+            var kanbans = _kanbanContext.Kanbans.Include(x => x.Boards).ThenInclude(x => x.Columns).ThenInclude(x => x.Tasks).ThenInclude(x => x.Subtasks).ToList();
             return kanbans;
         }
     }

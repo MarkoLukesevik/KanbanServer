@@ -2,8 +2,7 @@
 {
     public class User
     {
-        public User(string name, string lastName, string userName, string password, string email)
-        {
+        public User(string name, string lastName, string userName, string password, string email) {
             Name = name;
             LastName = lastName;
             UserName = userName;

@@ -1,4 +1,5 @@
-﻿using KanbanApp.Database;
+﻿using System.Net.Mail;
+using KanbanApp.Database;
 using KanbanApp.Exceptions;
 using KanbanApp.Models;
 using KanbanApp.Requests.UserRequests;
@@ -22,6 +23,9 @@ namespace KanbanApp.Services
             {
                 throw new ConflictException("User with given username already exists.");
             }
+
+            ValidateEmail(request.Email);
+            ValidatePassword(request.Password);
 
             var user = new User(
                 request.Name,
@@ -49,7 +53,43 @@ namespace KanbanApp.Services
             }
 
             return new UserResponse { Id = user.Id, UserName = user.UserName };
+        }
 
+        private static void ValidateEmail(string email)
+        {
+            var trimmedEmail = email.Trim();
+
+            if (trimmedEmail.EndsWith("."))
+            {
+                throw new InvalidFormatException("Email is not valid");
+            }
+            try
+            {
+                var addr = new MailAddress(email);
+                if (addr.Address != trimmedEmail)
+                    throw new InvalidFormatException("Email is not valid");
+            }
+            catch
+            {
+                throw new InvalidFormatException("Email is not valid");
+            }
+        }
+
+        private static void ValidatePassword(string password)
+        {
+            if (password == null)
+                throw new InvalidFormatException("Password is required");
+
+            if (password.Length <= 6)
+                throw new InvalidFormatException("Password must have at least 6 characters");
+
+            var passwordContainsDigits = false;
+            foreach (char c in password)
+            {
+                if (c >= '0' && c <= '9') passwordContainsDigits = true;
+            }
+            if (!passwordContainsDigits)
+                throw new InvalidFormatException("Password must have at least 1 digit");
         }
     }
 }

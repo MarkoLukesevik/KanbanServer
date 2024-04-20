@@ -12,7 +12,7 @@ namespace KanbanApp.Exceptions
                 NotFoundException => StatusCodes.Status404NotFound,
                 ConflictException => StatusCodes.Status409Conflict,
                 ArgumentException => StatusCodes.Status400BadRequest,
-
+                InvalidFormatException => StatusCodes.Status422UnprocessableEntity,
                 _ => StatusCodes.Status500InternalServerError
             };
 
