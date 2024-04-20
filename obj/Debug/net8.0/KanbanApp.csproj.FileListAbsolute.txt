@@ -134,3 +134,4 @@ C:\Users\marko\Desktop\Kanban\server\KanbanApp\obj\Debug\net8.0\refint\KanbanApp
 C:\Users\marko\Desktop\Kanban\server\KanbanApp\obj\Debug\net8.0\KanbanApp.pdb
 C:\Users\marko\Desktop\Kanban\server\KanbanApp\obj\Debug\net8.0\KanbanApp.genruntimeconfig.cache
 C:\Users\marko\Desktop\Kanban\server\KanbanApp\obj\Debug\net8.0\ref\KanbanApp.dll
+C:\Users\marko\Desktop\Kanban\server\KanbanApp\obj\Debug\net8.0\KanbanApp.sourcelink.json

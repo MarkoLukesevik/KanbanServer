@@ -10,10 +10,8 @@ namespace KanbanApp.Exceptions
             var statusCode = context.Exception switch
             {
                 NotFoundException => StatusCodes.Status404NotFound,
-
                 ConflictException => StatusCodes.Status409Conflict,
-
-                UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
+                ArgumentException => StatusCodes.Status400BadRequest,
 
                 _ => StatusCodes.Status500InternalServerError
             };

@@ -21,7 +21,7 @@ namespace KanbanApp.Controllers
         {
             if (registerRequest == null)
             {
-                throw new ArgumentNullException(nameof(registerRequest));
+                throw new ArgumentException("request body cannot be empty");
             }
 
             var result = _userService.RegisterUser(registerRequest);
