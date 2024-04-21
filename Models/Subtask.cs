@@ -2,7 +2,8 @@
 {
     public class Subtask
     {
-        public Subtask(string title, bool isComplete, DateTime createdAt, DateTime lastModifiedAt) {
+        public Subtask(Guid taskId, string title, bool isComplete, DateTime createdAt, DateTime lastModifiedAt) {
+            TaskId = taskId;
             Title = title;
             IsComplete = isComplete;
             CreatedAt = createdAt;

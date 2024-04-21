@@ -6,8 +6,7 @@ namespace KanbanApp.Services
 {
     public class KanbanService
     {
-        KanbanContext _kanbanContext;
-
+        readonly KanbanContext _kanbanContext;
         public KanbanService(KanbanContext kanbanContext)
         {
             _kanbanContext = kanbanContext;

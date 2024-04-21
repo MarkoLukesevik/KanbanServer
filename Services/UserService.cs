@@ -9,8 +9,7 @@ namespace KanbanApp.Services
 {
     public class UserService
     {
-        KanbanContext _kanbanContext;
-
+        readonly KanbanContext _kanbanContext;
         public UserService(KanbanContext kanbanContext)
         {
             _kanbanContext = kanbanContext;

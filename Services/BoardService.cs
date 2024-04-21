@@ -9,8 +9,7 @@ namespace KanbanApp.Services
 {
     public class BoardService
     {
-        KanbanContext _kanbanContext;
-
+        readonly KanbanContext _kanbanContext;
         public BoardService(KanbanContext kanbanContext)
         {
             _kanbanContext = kanbanContext;
@@ -31,9 +30,7 @@ namespace KanbanApp.Services
                 .FirstOrDefault(x => x.Id == boardId);
 
             if (board == null)
-            {
                 throw new NotFoundException("Board with given id was not found.");
-            }
 
             return board;
         }
@@ -45,11 +42,8 @@ namespace KanbanApp.Services
                 .ThenInclude(x => x.Tasks)
                 .ThenInclude(x => x.Subtasks)
                 .FirstOrDefault(x => x.Id == boardId);
-
             if (board == null)
-            {
                 throw new NotFoundException("Board with given id was not found.");
-            }
 
             _kanbanContext.Boards.Remove(board);
             _kanbanContext.SaveChanges();
@@ -59,9 +53,7 @@ namespace KanbanApp.Services
         {
             var kanban = _kanbanContext.Kanbans.FirstOrDefault(x => x.Id == request.KanbanId);
             if (kanban == null)
-            {
                 throw new NotFoundException("Kanban with given kanbanId was not found.");
-            }
 
             var columns = request.Columns.Select(x => new Column(x.Name, DateTime.Now, DateTime.Now)).ToList();
             var board = new Board(request.KanbanId, request.Name, DateTime.Now, DateTime.Now);
@@ -81,9 +73,7 @@ namespace KanbanApp.Services
                 .ThenInclude(x => x.Subtasks)
                 .FirstOrDefault(x => x.Id == request.Id);
             if (board == null)
-            {
                 throw new NotFoundException("Board with given id was not found.");
-            }
 
             var columnsToRemove = request.Columns
                 .Where(x => !board.Columns.Select(y => y.Id).Contains(x.Id))

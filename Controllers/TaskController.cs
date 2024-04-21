@@ -9,8 +9,7 @@ namespace KanbanApp.Controllers
     [Route("[controller]")]
     public class TaskController : ControllerBase
     {
-        TaskService _taskService;
-
+        readonly TaskService _taskService;
         public TaskController(TaskService taskService)
         {
             _taskService = taskService;
@@ -34,14 +33,23 @@ namespace KanbanApp.Controllers
 
         [HttpPost]
         [Route("createTask")]
-        public IResult CreateTask([FromBody] CreateTaskRequest createTaskRequest)
+        public IResult CreateTask([FromBody] CreateTaskRequest request)
         {
-            if (createTaskRequest == null)
-            {
+            if (request == null)
                 throw new ArgumentException("request body cannot be empty");
-            }
 
-            var result = _taskService.CreateTask(createTaskRequest);
+            var result = _taskService.CreateTask(request);
+            return Results.Ok(result);
+        }
+
+        [HttpPut]
+        [Route("editTask")]
+        public IResult EditTask([FromBody] EditTaskRequest request)
+        {
+            if (request == null)
+                throw new ArgumentException("request body cannot be empty");
+
+            var result = _taskService.EditTask(request);
             return Results.Ok(result);
         }
     }

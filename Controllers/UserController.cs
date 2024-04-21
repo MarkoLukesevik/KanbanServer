@@ -8,8 +8,7 @@ namespace KanbanApp.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
-        UserService _userService;
-
+        readonly UserService _userService;
         public UserController(UserService userService)
         {
             _userService = userService;
@@ -17,22 +16,23 @@ namespace KanbanApp.Controllers
 
         [HttpPost]
         [Route("/register")]
-        public IResult RegisterUser([FromBody] UserRegisterRequest registerRequest)
+        public IResult RegisterUser([FromBody] UserRegisterRequest request)
         {
-            if (registerRequest == null)
-            {
+            if (request == null)
                 throw new ArgumentException("request body cannot be empty");
-            }
 
-            var result = _userService.RegisterUser(registerRequest);
+            var result = _userService.RegisterUser(request);
             return Results.Ok(result);
         }
 
         [HttpPost]
         [Route("/login")]
-        public IResult LoginUser([FromBody] UserLoginRequest loginRequest)
+        public IResult LoginUser([FromBody] UserLoginRequest request)
         {
-            var result = _userService.LoginUser(loginRequest);
+            if (request == null)
+                throw new ArgumentException("request body cannot be empty");
+
+            var result = _userService.LoginUser(request);
             return Results.Ok(result);
         }
     }

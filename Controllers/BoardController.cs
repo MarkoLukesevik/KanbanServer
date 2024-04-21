@@ -9,8 +9,7 @@ namespace KanbanApp.Controllers
     [Route("[controller]")]
     public class BoardController : ControllerBase
     {
-        BoardService _boardService;
-
+        readonly BoardService _boardService;
         public BoardController(BoardService boardService)
         {
             _boardService = boardService;
@@ -42,27 +41,23 @@ namespace KanbanApp.Controllers
 
         [HttpPost]
         [Route("createBoard")]
-        public IResult CreateBoard([FromBody] CreateBoardRequest createBoardRequest)
+        public IResult CreateBoard([FromBody] CreateBoardRequest request)
         {
-            if (createBoardRequest == null)
-            {
+            if (request == null)
                 throw new ArgumentException("request body cannot be empty");
-            }
 
-            var result = _boardService.CreateBoard(createBoardRequest);
+            var result = _boardService.CreateBoard(request);
             return Results.Ok(result);
         }
 
         [HttpPut]
         [Route("editBoard")]
-        public IResult EditBoard([FromBody] EditBoardRequest editBoardRequest)
+        public IResult EditBoard([FromBody] EditBoardRequest request)
         {
-            if (editBoardRequest == null)
-            {
+            if (request == null)
                 throw new ArgumentException("request body cannot be empty");
-            }
 
-            var result = _boardService.EditBoard(editBoardRequest);
+            var result = _boardService.EditBoard(request);
             return Results.Ok(result);
         }
     }

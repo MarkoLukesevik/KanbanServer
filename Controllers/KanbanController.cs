@@ -7,8 +7,7 @@ namespace KanbanApp.Controllers
     [Route("[controller]")]
     public class KanbanController : ControllerBase
     {
-        KanbanService _kanbanService;
-
+        readonly KanbanService _kanbanService;
         public KanbanController(KanbanService kanbanService)
         {
             _kanbanService = kanbanService;
