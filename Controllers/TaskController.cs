@@ -1,5 +1,4 @@
-﻿using KanbanApp.Requests.BoardRequests;
-using KanbanApp.Requests.TaskRequests;
+﻿using KanbanApp.Requests.TaskRequests;
 using KanbanApp.Services;
 using Microsoft.AspNetCore.Mvc;
 

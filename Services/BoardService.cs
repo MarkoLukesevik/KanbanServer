@@ -6,6 +6,7 @@ using KanbanApp.Requests.BoardRequests;
 using KanbanApp.Requests.ColumnRequests;
 using KanbanApp.Responses;
 using Microsoft.EntityFrameworkCore;
+using ArgumentException = System.ArgumentException;
 
 namespace KanbanApp.Services
 {
@@ -57,6 +58,14 @@ namespace KanbanApp.Services
             if (kanban == null)
                 throw new NotFoundException("Kanban with given kanbanId was not found.");
 
+            var columnNames = new List<string>();
+            foreach (var column in request.Columns)
+            {
+                columnNames.Add(column.Name);
+            }
+            if (columnNames.Count != columnNames.Distinct().Count())
+                throw new ArgumentException("Columns cannot have duplicate names");
+
             var columns = request.Columns.Select(x => new Column(x.Name, DateTime.Now, DateTime.Now)).ToList();
             var board = new Board(request.KanbanId, request.Name, DateTime.Now, DateTime.Now);
             board.Columns = columns;
@@ -89,6 +98,14 @@ namespace KanbanApp.Services
 
         private static void EditBoardColumns (Board board, List<EditColumnRequest> columns)
         {
+            var columnNames = new List<string>();
+            foreach (var column in columns)
+            {
+                columnNames.Add(column.Name);
+            }
+            if (columnNames.Count != columnNames.Distinct().Count())
+                throw new ArgumentException("Columns cannot have duplicate names");
+
             foreach (var column in columns)
             {
                 var existingColumn = board.Columns.FirstOrDefault(x => x.Id == column.Id);
