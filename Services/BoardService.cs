@@ -1,7 +1,9 @@
-﻿using KanbanApp.Database;
+﻿using Azure.Core;
+using KanbanApp.Database;
 using KanbanApp.Exceptions;
 using KanbanApp.Models;
 using KanbanApp.Requests.BoardRequests;
+using KanbanApp.Requests.ColumnRequests;
 using KanbanApp.Responses;
 using Microsoft.EntityFrameworkCore;
 
@@ -75,14 +77,19 @@ namespace KanbanApp.Services
             if (board == null)
                 throw new NotFoundException("Board with given id was not found.");
 
-            var columnsToRemove = request.Columns
-                .Where(x => !board.Columns.Select(y => y.Id).Contains(x.Id))
-                    .Select(z => _kanbanContext.Columns
-                        .Include(z => z.Tasks)
-                        .ThenInclude(z => z.Subtasks)
-                        .FirstOrDefault(c => c.Id == z.Id)).ToList();
+            if (request.Name.Length > 0) board.Name = request.Name;
 
-            foreach (var column in request.Columns)
+            RemoveBoardColumns(board, request.Columns);
+            EditBoardColumns(board, request.Columns);
+
+            _kanbanContext.SaveChanges();
+            board.Columns = board.Columns.OrderBy(x => x.LastModifiedAt).ToList();
+            return board;
+        }
+
+        private static void EditBoardColumns (Board board, List<EditColumnRequest> columns)
+        {
+            foreach (var column in columns)
             {
                 var existingColumn = board.Columns.FirstOrDefault(x => x.Id == column.Id);
 
@@ -102,16 +109,23 @@ namespace KanbanApp.Services
                     board.Columns.Add(newColumn);
                 }
             }
+        }
+
+        private void RemoveBoardColumns(Board board, List<EditColumnRequest> columns)
+        {
+            var columnsToRemove = new List<Column>();
+            foreach (var boardColumn in board.Columns)
+            {
+                var columnToRemove = columns.FirstOrDefault(x => x.Id == boardColumn.Id);
+                if (columnToRemove == null)
+                    columnsToRemove.Add(boardColumn);
+            }
 
             foreach (var columnToRemove in columnsToRemove)
             {
                 if (columnToRemove != null)
-                _kanbanContext.Columns.Remove(columnToRemove);
+                    _kanbanContext.Columns.Remove(columnToRemove);
             }
-
-            _kanbanContext.SaveChanges();
-            board.Columns = board.Columns.OrderBy(x => x.LastModifiedAt).ToList();
-            return board;
         }
     }
 }

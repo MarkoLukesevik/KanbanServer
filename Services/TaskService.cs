@@ -84,6 +84,8 @@ namespace KanbanApp.Services
             task.LastModifiedAt = DateTime.Now;
 
             _kanbanContext.SaveChanges();
+
+            task.Subtasks = task.Subtasks.OrderBy(x => x.LastModifiedAt).ToList();
             return task;
         }
 
