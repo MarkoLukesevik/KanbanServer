@@ -16,7 +16,7 @@ namespace KanbanApp.Controllers
         }
 
         [HttpPost]
-        [Route("createSubtask")]
+        [Route("subtask")]
         public IResult CreateSubtask([FromBody] CreateSubtaskRequest request)
         {
             if (request == null)
@@ -27,7 +27,7 @@ namespace KanbanApp.Controllers
         }
 
         [HttpPut]
-        [Route("editSubtask")]
+        [Route("subtask")]
         public IResult EditSubtask([FromBody] EditSubtaskRequest request)
         {
             if (request == null)
@@ -38,7 +38,7 @@ namespace KanbanApp.Controllers
         }
 
         [HttpDelete]
-        [Route("deleteSubtask{subtaskId}")]
+        [Route("subtask{subtaskId}")]
         public IResult DeleteSubtask([FromRoute] Guid subtaskId)
         {
             _subtaskService.DeleteSubtask(subtaskId);

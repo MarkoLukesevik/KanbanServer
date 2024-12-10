@@ -15,7 +15,7 @@ namespace KanbanApp.Controllers
         }
 
         [HttpGet]
-        [Route("getTask{taskId}")]
+        [Route("task{taskId}")]
         public IResult GetTaskById([FromRoute] Guid taskId)
         {
             var result = _taskService.GetTask(taskId);
@@ -23,7 +23,7 @@ namespace KanbanApp.Controllers
         }
 
         [HttpDelete]
-        [Route("deleteTask")]
+        [Route("task")]
         public IResult DeleteTaskById(Guid taskId)
         {
             _taskService.DeleteTask(taskId);
@@ -31,7 +31,7 @@ namespace KanbanApp.Controllers
         }
 
         [HttpPost]
-        [Route("createTask")]
+        [Route("task")]
         public IResult CreateTask([FromBody] CreateTaskRequest request)
         {
             if (request == null)
@@ -42,7 +42,7 @@ namespace KanbanApp.Controllers
         }
 
         [HttpPut]
-        [Route("editTask")]
+        [Route("task")]
         public IResult EditTask([FromBody] EditTaskRequest request)
         {
             if (request == null)

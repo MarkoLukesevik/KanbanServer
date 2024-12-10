@@ -13,7 +13,7 @@ namespace KanbanApp.Controllers
             _kanbanService = kanbanService;
         }
         [HttpGet]
-        [Route("getAllKanbans")]
+        [Route("kanban")]
 
         public IResult GetAllKanbans()
         {

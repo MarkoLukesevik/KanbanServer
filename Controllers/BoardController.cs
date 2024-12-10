@@ -16,7 +16,7 @@ namespace KanbanApp.Controllers
         }
 
         [HttpGet]
-        [Route("/getBoards/{kanbanId}")]
+        [Route("boards/{kanbanId}")]
         public async Task<IResult> GetBoards([FromRoute] Guid kanbanId)
         {
             var result = await _boardService.GetAllMinifiedBoards(kanbanId);
@@ -24,7 +24,7 @@ namespace KanbanApp.Controllers
         }
 
         [HttpGet]
-        [Route("/getBoard/{boardId}")]
+        [Route("board/{boardId}")]
         public IResult GetBoardById([FromRoute] Guid boardId)
         {
             var result = _boardService.GetBoardById(boardId);
@@ -32,7 +32,7 @@ namespace KanbanApp.Controllers
         }
 
         [HttpDelete]
-        [Route("/deleteBoard/{boardId}")]
+        [Route("board/{boardId}")]
         public IResult DeleteBoardById([FromRoute] Guid boardId)
         {
             _boardService.DeleteBoardById(boardId);
@@ -40,7 +40,7 @@ namespace KanbanApp.Controllers
         }
 
         [HttpPost]
-        [Route("createBoard")]
+        [Route("board")]
         public IResult CreateBoard([FromBody] CreateBoardRequest request)
         {
             if (request == null)
@@ -51,7 +51,7 @@ namespace KanbanApp.Controllers
         }
 
         [HttpPut]
-        [Route("editBoard")]
+        [Route("board")]
         public IResult EditBoard([FromBody] EditBoardRequest request)
         {
             if (request == null)
