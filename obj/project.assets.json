@@ -4527,11 +4527,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\marko\\Desktop\\kanbanServer\\KanbanServer\\KanbanApp.csproj",
+      "projectUniqueName": "C:\\Users\\marko\\Desktop\\Marko\\projects\\Kanban\\KanbanServer\\KanbanApp.csproj",
       "projectName": "KanbanApp",
-      "projectPath": "C:\\Users\\marko\\Desktop\\kanbanServer\\KanbanServer\\KanbanApp.csproj",
+      "projectPath": "C:\\Users\\marko\\Desktop\\Marko\\projects\\Kanban\\KanbanServer\\KanbanApp.csproj",
       "packagesPath": "C:\\Users\\marko\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\marko\\Desktop\\kanbanServer\\KanbanServer\\obj\\",
+      "outputPath": "C:\\Users\\marko\\Desktop\\Marko\\projects\\Kanban\\KanbanServer\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\marko\\AppData\\Roaming\\NuGet\\NuGet.Config",

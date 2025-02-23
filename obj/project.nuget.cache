@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "wxg82SeNiMFL4kNO93+136c2lnyXPU9o8lin9kiLLopok0EiX8fpJu6LcOFWbyhjYjInA4xDJjTtz9ZUevalmg==",
+  "dgSpecHash": "FFw7+Dj7BJQ=",
   "success": true,
-  "projectFilePath": "C:\\Users\\marko\\Desktop\\kanbanServer\\KanbanServer\\KanbanApp.csproj",
+  "projectFilePath": "C:\\Users\\marko\\Desktop\\Marko\\projects\\Kanban\\KanbanServer\\KanbanApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\marko\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\marko\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
