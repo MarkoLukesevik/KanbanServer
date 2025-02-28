@@ -539,9 +539,9 @@ C:\Users\marko\Desktop\Marko\projects\Kanban\KanbanServer\obj\Debug\net8.0\stati
 C:\Users\marko\Desktop\Marko\projects\Kanban\KanbanServer\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.KanbanApp.props
 C:\Users\marko\Desktop\Marko\projects\Kanban\KanbanServer\obj\Debug\net8.0\staticwebassets.pack.json
 C:\Users\marko\Desktop\Marko\projects\Kanban\KanbanServer\obj\Debug\net8.0\scopedcss\bundle\KanbanApp.styles.css
-C:\Users\marko\Desktop\Marko\projects\Kanban\KanbanServer\obj\Debug\net8.0\KanbanApp.csproj.CopyComplete
 C:\Users\marko\Desktop\Marko\projects\Kanban\KanbanServer\obj\Debug\net8.0\KanbanApp.dll
 C:\Users\marko\Desktop\Marko\projects\Kanban\KanbanServer\obj\Debug\net8.0\refint\KanbanApp.dll
 C:\Users\marko\Desktop\Marko\projects\Kanban\KanbanServer\obj\Debug\net8.0\KanbanApp.pdb
 C:\Users\marko\Desktop\Marko\projects\Kanban\KanbanServer\obj\Debug\net8.0\KanbanApp.genruntimeconfig.cache
 C:\Users\marko\Desktop\Marko\projects\Kanban\KanbanServer\obj\Debug\net8.0\ref\KanbanApp.dll
+C:\Users\marko\Desktop\Marko\projects\Kanban\KanbanServer\obj\Debug\net8.0\KanbanApp.csproj.Up2Date
