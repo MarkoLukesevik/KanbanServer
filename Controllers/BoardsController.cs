@@ -1,63 +1,56 @@
 ﻿using KanbanApp.Requests.BoardRequests;
 using KanbanApp.Services;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KanbanApp.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class BoardsController : ControllerBase
+    public class BoardsController(BoardService boardService) : ControllerBase
     {
-        readonly BoardService _boardService;
-        public BoardsController(BoardService boardService)
-        {
-            _boardService = boardService;
-        }
-
         [HttpGet]
         [Route("{kanbanId}")]
         public async Task<IResult> GetBoards([FromRoute] Guid kanbanId)
         {
-            var result = await _boardService.GetAllMinifiedBoards(kanbanId);
+            var result = await boardService.GetAllMinifiedBoards(kanbanId);
             return Results.Ok(result);
         }
 
         [HttpGet]
         [Route("")]
-        public IResult GetBoardById([FromQuery] Guid id)
+        public async Task<IResult> GetBoardById([FromQuery] Guid id)
         {
-            var result = _boardService.GetBoardById(id);
+            var result = await boardService.GetBoardById(id);
             return Results.Ok(result);
         }
 
         [HttpDelete]
         [Route("")]
-        public IResult DeleteBoardById([FromQuery] Guid id)
+        public async Task<IResult> DeleteBoardById([FromQuery] Guid id)
         {
-            _boardService.DeleteBoardById(id);
+            await boardService.DeleteBoardById(id);
             return Results.Ok();
         }
 
         [HttpPost]
         [Route("")]
-        public IResult CreateBoard([FromBody] CreateBoardRequest request)
+        public async Task<IResult> CreateBoard([FromBody] CreateBoardRequest request)
         {
             if (request == null)
                 throw new ArgumentException("request body cannot be empty");
 
-            var result = _boardService.CreateBoard(request);
+            var result = await boardService.CreateBoard(request);
             return Results.Ok(result);
         }
 
         [HttpPut]
         [Route("")]
-        public IResult EditBoard([FromBody] EditBoardRequest request)
+        public async Task<IResult> EditBoard([FromBody] EditBoardRequest request)
         {
             if (request == null)
                 throw new ArgumentException("request body cannot be empty");
 
-            var result = _boardService.EditBoard(request);
+            var result = await boardService.EditBoard(request);
             return Results.Ok(result);
         }
     }

@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using KanbanApp.Database;
+﻿using KanbanApp.Database;
 using KanbanApp.Exceptions;
 using KanbanApp.Models;
 using KanbanApp.Requests.BoardRequests;
@@ -7,30 +6,25 @@ using KanbanApp.Requests.ColumnRequests;
 using KanbanApp.Responses;
 using Microsoft.EntityFrameworkCore;
 using ArgumentException = System.ArgumentException;
+using Task = System.Threading.Tasks.Task;
 
 namespace KanbanApp.Services
 {
-    public class BoardService
+    public class BoardService(KanbanContext kanbanContext)
     {
-        readonly KanbanContext _kanbanContext;
-        public BoardService(KanbanContext kanbanContext)
-        {
-            _kanbanContext = kanbanContext;
-        }
-
         public async Task<List<MinifiedBoardResponse>> GetAllMinifiedBoards(Guid kanbanId)
         {
-            return await _kanbanContext.Boards.Where(x => x.KanbanId == kanbanId)
+            return await kanbanContext.Boards.Where(x => x.KanbanId == kanbanId)
                 .Select(y => new MinifiedBoardResponse(y.Id, y.Name)).ToListAsync();
         }
 
-        public Board GetBoardById(Guid boardId)
+        public async Task<Board> GetBoardById(Guid boardId)
         {
-            var board = _kanbanContext.Boards
+            var board = await kanbanContext.Boards
                 .Include(x => x.Columns)
                 .ThenInclude(x => x.Tasks)
                 .ThenInclude(x => x.Subtasks)
-                .FirstOrDefault(x => x.Id == boardId);
+                .FirstOrDefaultAsync(x => x.Id == boardId);
 
             if (board == null)
                 throw new NotFoundException("Board with given id was not found.");
@@ -38,23 +32,23 @@ namespace KanbanApp.Services
             return board;
         }
 
-        public void DeleteBoardById(Guid boardId)
+        public async Task DeleteBoardById(Guid boardId)
         {
-            var board = _kanbanContext.Boards
+            var board = await kanbanContext.Boards
                 .Include(x => x.Columns)
                 .ThenInclude(x => x.Tasks)
                 .ThenInclude(x => x.Subtasks)
-                .FirstOrDefault(x => x.Id == boardId);
+                .FirstOrDefaultAsync(x => x.Id == boardId);
             if (board == null)
                 throw new NotFoundException("Board with given id was not found.");
 
-            _kanbanContext.Boards.Remove(board);
-            _kanbanContext.SaveChanges();
+            kanbanContext.Boards.Remove(board);
+            await kanbanContext.SaveChangesAsync();
         }
 
-        public Board CreateBoard(CreateBoardRequest request)
+        public async Task<Board> CreateBoard(CreateBoardRequest request)
         {
-            var kanban = _kanbanContext.Kanbans.FirstOrDefault(x => x.Id == request.KanbanId);
+            var kanban = await kanbanContext.Kanbans.FirstOrDefaultAsync(x => x.Id == request.KanbanId);
             if (kanban == null)
                 throw new NotFoundException("Kanban with given kanbanId was not found.");
 
@@ -70,19 +64,19 @@ namespace KanbanApp.Services
             var board = new Board(request.KanbanId, request.Name, DateTime.Now, DateTime.Now);
             board.Columns = columns;
 
-            _kanbanContext.Boards.Add(board);
-            _kanbanContext.SaveChanges();
+            kanbanContext.Boards.Add(board);
+            await kanbanContext.SaveChangesAsync();
 
             return board;
         }
 
-        public Board EditBoard(EditBoardRequest request)
+        public async Task<Board> EditBoard(EditBoardRequest request)
         {
-            var board = _kanbanContext.Boards
+            var board = await kanbanContext.Boards
                 .Include(x => x.Columns)
                 .ThenInclude(x => x.Tasks)
                 .ThenInclude(x => x.Subtasks)
-                .FirstOrDefault(x => x.Id == request.Id);
+                .FirstOrDefaultAsync(x => x.Id == request.Id);
             if (board == null)
                 throw new NotFoundException("Board with given id was not found.");
 
@@ -91,7 +85,7 @@ namespace KanbanApp.Services
             RemoveBoardColumns(board, request.Columns);
             EditBoardColumns(board, request.Columns);
 
-            _kanbanContext.SaveChanges();
+            await kanbanContext.SaveChangesAsync();
             board.Columns = board.Columns.OrderBy(x => x.LastModifiedAt).ToList();
             return board;
         }
@@ -141,7 +135,7 @@ namespace KanbanApp.Services
             foreach (var columnToRemove in columnsToRemove)
             {
                 if (columnToRemove != null)
-                    _kanbanContext.Columns.Remove(columnToRemove);
+                    kanbanContext.Columns.Remove(columnToRemove);
             }
         }
     }

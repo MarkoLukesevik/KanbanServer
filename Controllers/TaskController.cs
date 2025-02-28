@@ -6,49 +6,43 @@ namespace KanbanApp.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class TaskController : ControllerBase
+    public class TaskController(TaskService taskService) : ControllerBase
     {
-        readonly TaskService _taskService;
-        public TaskController(TaskService taskService)
-        {
-            _taskService = taskService;
-        }
-
         [HttpGet]
         [Route("")]
-        public IResult GetTaskById([FromQuery] Guid taskId)
+        public async Task<IResult> GetTaskById([FromQuery] Guid taskId)
         {
-            var result = _taskService.GetTask(taskId);
+            var result = await taskService.GetTask(taskId);
             return Results.Ok(result);
         }
 
         [HttpDelete]
         [Route("")]
-        public IResult DeleteTaskById([FromQuery] Guid taskId)
+        public async Task<IResult> DeleteTaskById([FromQuery] Guid taskId)
         {
-            _taskService.DeleteTask(taskId);
+            await taskService.DeleteTask(taskId);
             return Results.Ok();
         }
 
         [HttpPost]
         [Route("")]
-        public IResult CreateTask([FromBody] CreateTaskRequest request)
+        public async Task<IResult> CreateTask([FromBody] CreateTaskRequest request)
         {
             if (request == null)
                 throw new ArgumentException("request body cannot be empty");
 
-            var result = _taskService.CreateTask(request);
+            var result = await taskService.CreateTask(request);
             return Results.Ok(result);
         }
 
         [HttpPut]
         [Route("")]
-        public IResult EditTask([FromBody] EditTaskRequest request)
+        public async Task<IResult> EditTask([FromBody] EditTaskRequest request)
         {
             if (request == null)
                 throw new ArgumentException("request body cannot be empty");
 
-            var result = _taskService.EditTask(request);
+            var result = await taskService.EditTask(request);
             return Results.Ok(result);
         }
     }

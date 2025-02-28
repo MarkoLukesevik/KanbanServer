@@ -4,20 +4,15 @@ using KanbanApp.Exceptions;
 using KanbanApp.Models;
 using KanbanApp.Requests.UserRequests;
 using KanbanApp.Responses;
+using Microsoft.EntityFrameworkCore;
 
 namespace KanbanApp.Services
 {
-    public class UserService
+    public class UserService(KanbanContext kanbanContext)
     {
-        readonly KanbanContext _kanbanContext;
-        public UserService(KanbanContext kanbanContext)
+        public  async Task<UserResponse> RegisterUser(UserRegisterRequest request)
         {
-            _kanbanContext = kanbanContext;
-        }
-
-        public UserResponse RegisterUser(UserRegisterRequest request)
-        {
-            var existingUser = _kanbanContext.Users.FirstOrDefault(x => x.UserName == request.UserName);
+            var existingUser = await kanbanContext.Users.FirstOrDefaultAsync(x => x.UserName == request.UserName);
             if (existingUser != null)
             {
                 throw new ConflictException("User with given username already exists.");
@@ -32,19 +27,19 @@ namespace KanbanApp.Services
                 request.UserName,
                 request.Password,
                 request.Email);
-            _kanbanContext.Users.Add(user);
-            _kanbanContext.SaveChanges();
+            kanbanContext.Users.Add(user);
+            await kanbanContext.SaveChangesAsync();
 
             var kanban = new Kanban(user.Id);
-            _kanbanContext.Kanbans.Add(kanban);
-            _kanbanContext.SaveChanges();
+            kanbanContext.Kanbans.Add(kanban);
+            await kanbanContext.SaveChangesAsync();
 
             return new UserResponse { Id = user.Id, UserName = user.UserName };
         }
 
-        public UserResponse LoginUser(UserLoginRequest request)
+        public async Task<UserResponse> LoginUser(UserLoginRequest request)
         {
-            var user = _kanbanContext.Users.FirstOrDefault(x => x.UserName == request.UserName && x.Password == request.Password);
+            var user = await kanbanContext.Users.FirstOrDefaultAsync(x => x.UserName == request.UserName && x.Password == request.Password);
 
             if (user == null)
             {

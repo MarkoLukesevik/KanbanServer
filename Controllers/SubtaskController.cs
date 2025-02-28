@@ -1,5 +1,4 @@
 ﻿using KanbanApp.Requests.SubtaskRequests;
-using KanbanApp.Requests.TaskRequests;
 using KanbanApp.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,41 +6,35 @@ namespace KanbanApp.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class SubtaskController : ControllerBase
+    public class SubtaskController(SubtaskService subtaskService) : ControllerBase
     {
-        readonly SubtaskService _subtaskService;
-        public SubtaskController(SubtaskService subtaskService)
-        {
-            _subtaskService = subtaskService;
-        }
-
         [HttpPost]
         [Route("")]
-        public IResult CreateSubtask([FromBody] CreateSubtaskRequest request)
+        public async Task<IResult> CreateSubtask([FromBody] CreateSubtaskRequest request)
         {
             if (request == null)
                 throw new ArgumentException("request body cannot be empty");
 
-            var result = _subtaskService.CreateSubtask(request);
+            var result = await subtaskService.CreateSubtask(request);
             return Results.Ok(result);
         }
 
         [HttpPut]
         [Route("")]
-        public IResult EditSubtask([FromBody] EditSubtaskRequest request)
+        public async Task<IResult> EditSubtask([FromBody] EditSubtaskRequest request)
         {
             if (request == null)
                 throw new ArgumentException("request body cannot be empty");
 
-            var result = _subtaskService.EditSubtask(request);
+            var result = await subtaskService.EditSubtask(request);
             return Results.Ok(result);
         }
 
         [HttpDelete]
         [Route("")]
-        public IResult DeleteSubtask([FromQuery] Guid subtaskId)
+        public async Task<IResult> DeleteSubtask([FromQuery] Guid subtaskId)
         {
-            _subtaskService.DeleteSubtask(subtaskId);
+            await subtaskService.DeleteSubtask(subtaskId);
             return Results.Ok();
         }
     }

@@ -1,26 +1,20 @@
-﻿using Azure.Core;
-using KanbanApp.Database;
+﻿using KanbanApp.Database;
 using KanbanApp.Exceptions;
 using KanbanApp.Models;
 using KanbanApp.Requests.SubtaskRequests;
 using KanbanApp.Requests.TaskRequests;
 using Microsoft.EntityFrameworkCore;
+using Task = System.Threading.Tasks.Task;
 
 namespace KanbanApp.Services
 {
-    public class TaskService
+    public class TaskService(KanbanContext kanbanContext, SubtaskService subtaskService)
     {
-        readonly KanbanContext _kanbanContext;
-        readonly SubtaskService _subtaskService;
-        public TaskService(KanbanContext kanbanContext, SubtaskService subtaskService)
+        public async Task<Models.Task> GetTask(Guid taskId)
         {
-            _kanbanContext = kanbanContext;
-            _subtaskService = subtaskService;
-        }
-
-        public Models.Task GetTask(Guid taskId)
-        {
-            var task = _kanbanContext.Tasks.Include(x => x.Subtasks).FirstOrDefault(x => x.Id == taskId);
+            var task = await kanbanContext.Tasks
+                .Include(x => x.Subtasks)
+                .FirstOrDefaultAsync(x => x.Id == taskId);
 
             if (task == null)
                 throw new NotFoundException("Task with given id was not found.");
@@ -28,20 +22,22 @@ namespace KanbanApp.Services
             return task;
         }
 
-        public void DeleteTask(Guid taskId)
+        public async Task DeleteTask(Guid taskId)
         {
-            var task = _kanbanContext.Tasks.FirstOrDefault(x => x.Id == taskId);
+            var task = await kanbanContext.Tasks.FirstOrDefaultAsync(x => x.Id == taskId);
 
             if (task == null)
                 throw new NotFoundException("Task with given id was not found.");
 
-            _kanbanContext.Tasks.Remove(task);
-            _kanbanContext.SaveChanges();
+            kanbanContext.Tasks.Remove(task);
+            await kanbanContext.SaveChangesAsync();
         }
 
-        public Models.Task CreateTask(CreateTaskRequest request)
+        public async Task<Models.Task> CreateTask(CreateTaskRequest request)
         {
-            var board = _kanbanContext.Boards.Include(x => x.Columns).FirstOrDefault(x => x.Id == request.BoardId);
+            var board = await kanbanContext.Boards
+                .Include(x => x.Columns)
+                .FirstOrDefaultAsync(x => x.Id == request.BoardId);
             if (board == null)
                 throw new NotFoundException("Board with given boardId was not found.");
 
@@ -60,41 +56,44 @@ namespace KanbanApp.Services
 
             foreach (var subtask in request.Subtasks)
             {
-                task.Subtasks.Add(_subtaskService.CreateSubtask(subtask));
+                var createdSubtask = await subtaskService.CreateSubtask(subtask);
+                task.Subtasks.Add(createdSubtask);
             }
 
-            _kanbanContext.Tasks.Add(task);
-            _kanbanContext.SaveChanges();
+            kanbanContext.Tasks.Add(task);
+            await kanbanContext.SaveChangesAsync();
 
             return task;
         }
 
-        public Models.Task EditTask(EditTaskRequest request)
+        public async Task<Models.Task> EditTask(EditTaskRequest request)
         {
-            var task = _kanbanContext.Tasks.Include(x => x.Subtasks).FirstOrDefault(x => x.Id == request.Id);
+            var task = await kanbanContext.Tasks
+                .Include(x => x.Subtasks)
+                .FirstOrDefaultAsync(x => x.Id == request.Id);
             if (task == null)
                 throw new NotFoundException("Task with given id was not found.");
 
             if (request.Title.Length > 0) task.Title = request.Title;
             if (request.Description.Length > 0) task.Description = request.Description;
 
-            EditTaskStatus(task, request.Status);
-            EditSubtasks(task, request);
+            await EditTaskStatus(task, request.Status);
+            await EditSubtasks(task, request);
 
             task.LastModifiedAt = DateTime.Now;
 
-            _kanbanContext.SaveChanges();
+            await kanbanContext.SaveChangesAsync();
 
             task.Subtasks = task.Subtasks.OrderBy(x => x.LastModifiedAt).ToList();
             return task;
         }
 
-        private void EditTaskStatus(Models.Task task, string status)
+        private async Task EditTaskStatus(Models.Task task, string status)
         {
-            var column = _kanbanContext.Columns.FirstOrDefault(x => x.Id != task.ColumnId);
+            var column = await kanbanContext.Columns.FirstOrDefaultAsync(x => x.Id != task.ColumnId);
             if (column != null)
             {
-                var board = _kanbanContext.Boards.FirstOrDefault(x => x.Id != column.BoardId);
+                var board = await kanbanContext.Boards.FirstOrDefaultAsync(x => x.Id != column.BoardId);
                 if (board != null)
                 {
                     var columnNames = new List<string>();
@@ -110,14 +109,14 @@ namespace KanbanApp.Services
             }
         }
 
-        private void EditSubtasks(Models.Task task, EditTaskRequest request)
+        private async Task EditSubtasks(Models.Task task, EditTaskRequest request)
         {
             var subtasksToRemove = new List<Subtask>();
             foreach (var subtask in task.Subtasks)
             {
                 var currentSubtask = request.Subtasks.FirstOrDefault(x => x.Id == subtask.Id);
                 if (currentSubtask != null)
-                    _subtaskService.EditSubtask(currentSubtask);
+                    await subtaskService.EditSubtask(currentSubtask);
                 else if (currentSubtask == null)
                     subtasksToRemove.Add(subtask);
             }
@@ -125,12 +124,12 @@ namespace KanbanApp.Services
             foreach (var subtask in request.Subtasks)
             {
                 if (subtask.Id == null)
-                    _subtaskService.CreateSubtask(new CreateSubtaskRequest { Title = subtask.Title, TaskId = request.Id });
+                    await subtaskService.CreateSubtask(new CreateSubtaskRequest { Title = subtask.Title, TaskId = request.Id });
             }
 
             foreach (var subtask in subtasksToRemove)
             {
-                _kanbanContext.Remove(subtask);
+                kanbanContext.Remove(subtask);
             }
         }
     }

@@ -5,19 +5,14 @@ namespace KanbanApp.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class KanbanController : ControllerBase
+    public class KanbanController(KanbanService kanbanService) : ControllerBase
     {
-        readonly KanbanService _kanbanService;
-        public KanbanController(KanbanService kanbanService)
-        {
-            _kanbanService = kanbanService;
-        }
         [HttpGet]
         [Route("")]
 
-        public IResult GetAllKanbans([FromQuery] Guid userId)
+        public async Task<IResult> GetAllKanbans([FromQuery] Guid userId)
         {
-            var result = _kanbanService.GetKanban(userId);
+            var result = await kanbanService.GetKanban(userId);
             return Results.Ok(result);
         }
     }
