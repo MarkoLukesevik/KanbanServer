@@ -12,10 +12,10 @@ namespace KanbanApp.Services
     {
         public  async Task<UserResponse> RegisterUser(UserRegisterRequest request)
         {
-            var existingUser = await kanbanContext.Users.FirstOrDefaultAsync(x => x.UserName == request.UserName);
+            var existingUser = await kanbanContext.Users.FirstOrDefaultAsync(x => x.UserName == request.UserName|| x.Email == request.Email);
             if (existingUser != null)
             {
-                throw new ConflictException("User with given username already exists.");
+                throw new ConflictException("User with given username or email already exists.");
             }
 
             ValidateEmail(request.Email);
