@@ -16,6 +16,7 @@ builder.Services.AddScoped<BoardService>();
 builder.Services.AddScoped<TaskService>();
 builder.Services.AddScoped<SubtaskService>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<ColumnService>();
 builder.Services.AddDbContext<KanbanContext>(options => options.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"));
 
 builder.Services.AddCors(options =>

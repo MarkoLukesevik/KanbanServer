@@ -6,6 +6,6 @@ namespace KanbanApp.Requests.BoardRequests
     {
         public string Name { get; set; }
         public Guid KanbanId { get; set; }
-        public List<AddColumnRequest> Columns { get; set; }
+        public List<string> Columns { get; set; }
     }
 }

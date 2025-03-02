@@ -31,6 +31,7 @@ namespace KanbanApp.Services
             await kanbanContext.SaveChangesAsync();
 
             var kanban = new Kanban(user.Id);
+            GetDefaultBoardForNewKanban(kanban);
             kanbanContext.Kanbans.Add(kanban);
             await kanbanContext.SaveChangesAsync();
 
@@ -47,6 +48,18 @@ namespace KanbanApp.Services
             }
 
             return new UserResponse { Id = user.Id, UserName = user.UserName };
+        }
+        
+        private void GetDefaultBoardForNewKanban(Kanban kanban)
+        {
+            var board = new Board(kanban.Id, "Default board", DateTime.Now, DateTime.Now);
+            
+            board.Columns = new List<Column>();
+            board.Columns.Add(new Column("Todo", DateTime.Now, DateTime.Now));
+            board.Columns.Add(new Column("Doing", DateTime.Now, DateTime.Now));
+            board.Columns.Add(new Column("Done", DateTime.Now, DateTime.Now));
+            
+            kanban.Boards.Add(board);
         }
 
         private static void ValidateEmail(string email)
@@ -74,7 +87,7 @@ namespace KanbanApp.Services
             if (password == null)
                 throw new InvalidFormatException("Password is required");
 
-            if (password.Length <= 6)
+            if (password.Length < 6)
                 throw new InvalidFormatException("Password must have at least 6 characters");
 
             var passwordContainsDigits = false;

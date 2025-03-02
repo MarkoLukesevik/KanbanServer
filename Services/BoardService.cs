@@ -55,12 +55,12 @@ namespace KanbanApp.Services
             var columnNames = new List<string>();
             foreach (var column in request.Columns)
             {
-                columnNames.Add(column.Name);
+                columnNames.Add(column);
             }
             if (columnNames.Count != columnNames.Distinct().Count())
                 throw new ArgumentException("Columns cannot have duplicate names");
 
-            var columns = request.Columns.Select(x => new Column(x.Name, DateTime.Now, DateTime.Now)).ToList();
+            var columns = request.Columns.Select(x => new Column(x, DateTime.Now, DateTime.Now)).ToList();
             var board = new Board(request.KanbanId, request.Name, DateTime.Now, DateTime.Now);
             board.Columns = columns;
 
