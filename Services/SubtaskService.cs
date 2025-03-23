@@ -15,7 +15,6 @@ namespace KanbanApp.Services
                 throw new Exceptions.ArgumentException("Subtask title cannot be empty");
 
             var subtask = new Subtask(
-                request.TaskId,
                 request.Title,
                 false,
                 DateTime.Now,

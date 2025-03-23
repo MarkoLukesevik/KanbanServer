@@ -54,10 +54,17 @@ namespace KanbanApp.Services
                 DateTime.Now,
                 DateTime.Now);
 
+            task.Subtasks = new List<Subtask>();
             foreach (var subtask in request.Subtasks)
             {
-                var createdSubtask = await subtaskService.CreateSubtask(subtask);
-                task.Subtasks.Add(createdSubtask);
+                var newSubtask = new Subtask(
+                    subtask.Title,
+                    false,
+                    DateTime.Now,
+                    DateTime.Now
+                );
+                
+                task.Subtasks.Add(newSubtask);
             }
 
             kanbanContext.Tasks.Add(task);
