@@ -21,6 +21,8 @@ namespace KanbanApp.Services
                 DateTime.Now
                 );
             
+            subtask.TaskId = request.TaskId;
+            
             kanbanContext.Subtasks.Add(subtask);
             await kanbanContext.SaveChangesAsync();
             return subtask;

@@ -63,7 +63,7 @@ namespace KanbanApp.Services
                     DateTime.Now,
                     DateTime.Now
                 );
-                
+
                 task.Subtasks.Add(newSubtask);
             }
 
@@ -86,7 +86,6 @@ namespace KanbanApp.Services
 
             await EditTaskStatus(task, request.Status);
             await EditSubtasks(task, request);
-
             task.LastModifiedAt = DateTime.Now;
 
             await kanbanContext.SaveChangesAsync();
@@ -97,10 +96,12 @@ namespace KanbanApp.Services
 
         private async Task EditTaskStatus(Models.Task task, string status)
         {
-            var column = await kanbanContext.Columns.FirstOrDefaultAsync(x => x.Id != task.ColumnId);
+            var column = await kanbanContext.Columns.Include(x => x.Tasks)
+                .FirstOrDefaultAsync(x => x.Id == task.ColumnId);
             if (column != null)
             {
-                var board = await kanbanContext.Boards.FirstOrDefaultAsync(x => x.Id != column.BoardId);
+                var board = await kanbanContext.Boards.Include(x => x.Columns)
+                    .FirstOrDefaultAsync(x => x.Id == column.BoardId);
                 if (board != null)
                 {
                     var columnNames = new List<string>();
@@ -111,7 +112,18 @@ namespace KanbanApp.Services
 
                     if (!columnNames.Contains(status))
                         throw new NotFoundException("There is no column name with the provided status");
-                    task.Status = status;
+
+                    var newStatusColumn = board.Columns.FirstOrDefault(x => x.Name == status);
+                    if (newStatusColumn != null)
+                    {
+                        if (task.Status != status)
+                        {
+                            task.Status = status;
+                            task.ColumnId = newStatusColumn.Id;
+                            column.Tasks.Remove(task);
+                            newStatusColumn.Tasks.Add(task);
+                        }
+                    }
                 }
             }
         }
@@ -130,8 +142,9 @@ namespace KanbanApp.Services
 
             foreach (var subtask in request.Subtasks)
             {
-                if (subtask.Id == null)
-                    await subtaskService.CreateSubtask(new CreateSubtaskRequest { Title = subtask.Title, TaskId = request.Id });
+                if (task.Subtasks.Any(x => x.Id == subtask.Id)) continue;
+                await subtaskService.CreateSubtask(new CreateSubtaskRequest
+                    { Title = subtask.Title, TaskId = request.Id });
             }
 
             foreach (var subtask in subtasksToRemove)
