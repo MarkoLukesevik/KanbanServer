@@ -57,6 +57,7 @@ namespace KanbanApp.Services
             {
                 columnNames.Add(column);
             }
+
             if (columnNames.Count != columnNames.Distinct().Count())
                 throw new ArgumentException("Columns cannot have duplicate names");
 
@@ -90,13 +91,14 @@ namespace KanbanApp.Services
             return board;
         }
 
-        private static void EditBoardColumns (Board board, List<EditColumnRequest> columns)
+        private static void EditBoardColumns(Board board, List<EditColumnRequest> columns)
         {
             var columnNames = new List<string>();
             foreach (var column in columns)
             {
                 columnNames.Add(column.Name);
             }
+
             if (columnNames.Count != columnNames.Distinct().Count())
                 throw new ArgumentException("Columns cannot have duplicate names");
 
@@ -134,8 +136,7 @@ namespace KanbanApp.Services
 
             foreach (var columnToRemove in columnsToRemove)
             {
-                if (columnToRemove != null)
-                    kanbanContext.Columns.Remove(columnToRemove);
+                kanbanContext.Columns.Remove(columnToRemove);
             }
         }
     }
