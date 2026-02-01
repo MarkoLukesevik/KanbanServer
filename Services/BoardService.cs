@@ -93,36 +93,35 @@ namespace KanbanApp.Services
 
         private static void EditBoardColumns(Board board, List<EditColumnRequest> columns)
         {
-            var columnNames = new List<string>();
-            foreach (var column in columns)
-            {
-                columnNames.Add(column.Name);
-            }
+            var columnNames = columns.Select(c => c.Name).ToList();
 
             if (columnNames.Count != columnNames.Distinct().Count())
                 throw new ArgumentException("Columns cannot have duplicate names");
 
             foreach (var column in columns)
             {
-                var existingColumn = board.Columns.FirstOrDefault(x => x.Id == column.Id);
+                bool isNew = column.Id == Guid.Empty;
 
-                if (existingColumn != null)
+                if (!isNew)
                 {
-                    existingColumn.Name = column.Name;
-                    existingColumn.LastModifiedAt = DateTime.Now;
-
-                    foreach (var task in existingColumn.Tasks)
+                    var existingColumn = board.Columns.FirstOrDefault(x => x.Id == column.Id);
+                    if (existingColumn != null)
                     {
-                        task.Status = column.Name;
+                        existingColumn.Name = column.Name;
+                        existingColumn.LastModifiedAt = DateTime.Now;
+
+                        foreach (var task in existingColumn.Tasks)
+                            task.Status = column.Name;
+
+                        continue;
                     }
                 }
-                else
-                {
-                    var newColumn = new Column(column.Name, DateTime.Now, DateTime.Now);
-                    board.Columns.Add(newColumn);
-                }
+                
+                var newColumn = new Column(column.Name, DateTime.Now, DateTime.Now);
+                board.Columns.Add(newColumn);
             }
         }
+
 
         private void RemoveBoardColumns(Board board, List<EditColumnRequest> columns)
         {
