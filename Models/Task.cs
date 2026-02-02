@@ -18,5 +18,6 @@
         public List<Subtask> Subtasks { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime LastModifiedAt { get; set; }
+        public int Order { get; set; }
     }
 }

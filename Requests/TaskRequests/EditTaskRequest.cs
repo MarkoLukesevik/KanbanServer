@@ -9,5 +9,6 @@ namespace KanbanApp.Requests.TaskRequests
         public string Description { get; set; }
         public string Status { get; set; }
         public List<EditSubtaskRequest> Subtasks { get; set; }
+        public int Order { get; set; }
     }
 }

@@ -53,6 +53,7 @@ namespace KanbanApp.Services
                 request.Status,
                 DateTime.Now,
                 DateTime.Now);
+            task.Order = request.Order;
 
             task.Subtasks = new List<Subtask>();
             foreach (var subtask in request.Subtasks)
@@ -86,6 +87,20 @@ namespace KanbanApp.Services
 
             await EditTaskStatus(task, request.Status);
             await EditSubtasks(task, request);
+            task.Order = request.Order;
+            var tasksInColumn = await kanbanContext.Tasks
+                .Where(t => t.ColumnId == task.ColumnId && t.Id != task.Id)
+                .OrderBy(t => t.Order)
+                .ToListAsync();
+
+            for (int i = 0; i < tasksInColumn.Count; i++)
+            {
+                if (i >= task.Order)
+                    tasksInColumn[i].Order = i + 1; // shift down to make room
+                else
+                    tasksInColumn[i].Order = i;
+            }
+            
             task.LastModifiedAt = DateTime.Now;
 
             await kanbanContext.SaveChangesAsync();
