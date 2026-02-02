@@ -20,7 +20,7 @@ public class ColumnService(KanbanContext kanbanContext)
         if (board.Columns.Any(x => x.Name == request.Name)) 
             throw new NotFoundException("There is already a column with the name provided fot this board.");
 
-        var column = new Column(request.Name, DateTime.Now, DateTime.Now);
+        var column = new Column(request.Name, DateTime.UtcNow, DateTime.UtcNow);
         board.Columns.Add(column);
         await kanbanContext.SaveChangesAsync();
         

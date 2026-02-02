@@ -51,8 +51,8 @@ namespace KanbanApp.Services
                 request.Title,
                 request.Description,
                 request.Status,
-                DateTime.Now,
-                DateTime.Now);
+                DateTime.UtcNow,
+                DateTime.UtcNow);
             task.Order = request.Order;
 
             task.Subtasks = new List<Subtask>();
@@ -61,8 +61,8 @@ namespace KanbanApp.Services
                 var newSubtask = new Subtask(
                     subtask.Title,
                     false,
-                    DateTime.Now,
-                    DateTime.Now
+                    DateTime.UtcNow,
+                    DateTime.UtcNow
                 );
 
                 task.Subtasks.Add(newSubtask);
@@ -101,7 +101,7 @@ namespace KanbanApp.Services
                     tasksInColumn[i].Order = i;
             }
             
-            task.LastModifiedAt = DateTime.Now;
+            task.LastModifiedAt = DateTime.UtcNow;
 
             await kanbanContext.SaveChangesAsync();
 

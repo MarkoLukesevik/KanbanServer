@@ -17,8 +17,8 @@ namespace KanbanApp.Services
             var subtask = new Subtask(
                 request.Title,
                 false,
-                DateTime.Now,
-                DateTime.Now
+                DateTime.UtcNow,
+                DateTime.UtcNow
                 );
             
             subtask.TaskId = request.TaskId;
@@ -37,7 +37,7 @@ namespace KanbanApp.Services
 
             if (request.Title.Length > 0) subtask.Title = request.Title;
             subtask.IsComplete = request.IsComplete;
-            subtask.LastModifiedAt = DateTime.Now;
+            subtask.LastModifiedAt = DateTime.UtcNow;
         
             await kanbanContext.SaveChangesAsync();
             return subtask;

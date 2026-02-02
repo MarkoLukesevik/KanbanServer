@@ -68,8 +68,8 @@ namespace KanbanApp.Services
             if (columnNames.Count != columnNames.Distinct().Count())
                 throw new ArgumentException("Columns cannot have duplicate names");
 
-            var columns = request.Columns.Select(x => new Column(x, DateTime.Now, DateTime.Now)).ToList();
-            var board = new Board(request.KanbanId, request.Name, DateTime.Now, DateTime.Now);
+            var columns = request.Columns.Select(x => new Column(x, DateTime.UtcNow, DateTime.UtcNow)).ToList();
+            var board = new Board(request.KanbanId, request.Name, DateTime.UtcNow, DateTime.UtcNow);
             board.Columns = columns;
 
             kanbanContext.Boards.Add(board);
@@ -115,7 +115,7 @@ namespace KanbanApp.Services
                     if (existingColumn != null)
                     {
                         existingColumn.Name = column.Name;
-                        existingColumn.LastModifiedAt = DateTime.Now;
+                        existingColumn.LastModifiedAt = DateTime.UtcNow;
 
                         foreach (var task in existingColumn.Tasks)
                             task.Status = column.Name;
@@ -124,7 +124,7 @@ namespace KanbanApp.Services
                     }
                 }
                 
-                var newColumn = new Column(column.Name, DateTime.Now, DateTime.Now);
+                var newColumn = new Column(column.Name, DateTime.UtcNow, DateTime.UtcNow);
                 board.Columns.Add(newColumn);
             }
         }

@@ -31,8 +31,9 @@ namespace KanbanApp.Services
             await kanbanContext.SaveChangesAsync();
 
             var kanban = new Kanban(user.Id);
-            kanban.Boards = new List<Board>();
             kanbanContext.Kanbans.Add(kanban);
+            await kanbanContext.SaveChangesAsync();
+            GetDefaultBoardForNewKanban(kanban);
             await kanbanContext.SaveChangesAsync();
 
             return new UserResponse { Id = user.Id, UserName = user.UserName };
@@ -48,6 +49,17 @@ namespace KanbanApp.Services
             }
 
             return new UserResponse { Id = user.Id, UserName = user.UserName };
+        }
+        
+        private void GetDefaultBoardForNewKanban(Kanban kanban)
+        {
+            var board = new Board(kanban.Id, "Default board", DateTime.UtcNow, DateTime.UtcNow);
+            board.Columns = new List<Column>();
+            board.Columns.Add(new Column("Todo", DateTime.UtcNow, DateTime.UtcNow));
+            board.Columns.Add(new Column("Doing", DateTime.UtcNow, DateTime.UtcNow));
+            board.Columns.Add(new Column("Done", DateTime.UtcNow, DateTime.UtcNow));
+            
+            kanban.Boards.Add(board);
         }
 
         private static void ValidateEmail(string email)
