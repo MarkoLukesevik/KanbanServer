@@ -1,0 +1,5 @@
+﻿[phases.build]
+cmds = ["dotnet publish -c Release /p:PublishDir=out"]
+
+[start]
+cmd = "dotnet out/KanbanApp.dll"
