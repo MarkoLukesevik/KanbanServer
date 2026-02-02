@@ -685,3 +685,5 @@ C:\Users\marko\Desktop\Marko\KanbanServer\obj\Debug\net8.0\rjsmcshtml.dswa.cache
 C:\Users\marko\Desktop\Marko\KanbanServer\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\marko\Desktop\Marko\KanbanServer\obj\Debug\net8.0\staticwebassets.build.endpoints.json
 C:\Users\marko\Desktop\Marko\KanbanServer\obj\Debug\net8.0\swae.build.ex.cache
+C:\Users\marko\Desktop\Marko\KanbanServer\bin\Debug\net8.0\Npgsql.dll
+C:\Users\marko\Desktop\Marko\KanbanServer\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
