@@ -29,6 +29,7 @@ namespace KanbanApp.Services
             if (board == null)
                 throw new NotFoundException("Board with given id was not found.");
 
+            board.Columns = board.Columns.OrderBy(x => x.CreatedAt).ToList();
             foreach (var column in board.Columns)
             {
                 column.Tasks = column.Tasks
