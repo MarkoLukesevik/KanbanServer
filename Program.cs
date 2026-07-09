@@ -5,6 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Bind to the port the host provides (Render/Railway set $PORT), falling back to 8080.
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrEmpty(port))
+{
+    builder.WebHost.UseUrls($"http://+:{port}");
+}
+
 // Add services to the container.
 
 builder.Services.AddControllers(options =>

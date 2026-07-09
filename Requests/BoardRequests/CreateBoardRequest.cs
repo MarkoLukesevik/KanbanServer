@@ -1,6 +1,4 @@
-﻿using KanbanApp.Requests.ColumnRequests;
-
-namespace KanbanApp.Requests.BoardRequests
+﻿namespace KanbanApp.Requests.BoardRequests
 {
     public class CreateBoardRequest
     {
