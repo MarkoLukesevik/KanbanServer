@@ -139,3 +139,4 @@ C:\Users\marko\Desktop\Marko\KanbanServer\obj\Release\net8.0\refint\KanbanApp.dl
 C:\Users\marko\Desktop\Marko\KanbanServer\obj\Release\net8.0\KanbanApp.pdb
 C:\Users\marko\Desktop\Marko\KanbanServer\obj\Release\net8.0\KanbanApp.genruntimeconfig.cache
 C:\Users\marko\Desktop\Marko\KanbanServer\obj\Release\net8.0\ref\KanbanApp.dll
+C:\Users\marko\Desktop\Marko\KanbanServer\bin\Release\net8.0\KanbanApp.exe

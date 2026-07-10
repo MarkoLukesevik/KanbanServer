@@ -19,6 +19,7 @@ namespace KanbanApp.Services
             if (task == null)
                 throw new NotFoundException("Task with given id was not found.");
 
+            task.Subtasks = task.Subtasks.OrderBy(s => s.CreatedAt).ToList();
             return task;
         }
 
@@ -56,13 +57,16 @@ namespace KanbanApp.Services
             task.Order = request.Order;
 
             task.Subtasks = new List<Subtask>();
+            var subtaskBaseTime = DateTime.UtcNow;
+            var subtaskIndex = 0;
             foreach (var subtask in request.Subtasks)
             {
+                var subtaskCreatedAt = subtaskBaseTime.AddMilliseconds(subtaskIndex++);
                 var newSubtask = new Subtask(
                     subtask.Title,
                     false,
-                    DateTime.UtcNow,
-                    DateTime.UtcNow
+                    subtaskCreatedAt,
+                    subtaskCreatedAt
                 );
 
                 task.Subtasks.Add(newSubtask);
@@ -105,7 +109,7 @@ namespace KanbanApp.Services
 
             await kanbanContext.SaveChangesAsync();
 
-            task.Subtasks = task.Subtasks.OrderBy(x => x.LastModifiedAt).ToList();
+            task.Subtasks = task.Subtasks.OrderBy(x => x.CreatedAt).ToList();
             return task;
         }
 

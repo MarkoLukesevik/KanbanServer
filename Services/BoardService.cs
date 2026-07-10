@@ -35,6 +35,11 @@ namespace KanbanApp.Services
                 column.Tasks = column.Tasks
                     .OrderBy(t => t.Order)
                     .ToList();
+
+                foreach (var task in column.Tasks)
+                {
+                    task.Subtasks = task.Subtasks.OrderBy(s => s.CreatedAt).ToList();
+                }
             }
 
             return board;
@@ -68,8 +73,11 @@ namespace KanbanApp.Services
 
             if (columnNames.Count != columnNames.Distinct().Count())
                 throw new ArgumentException("Columns cannot have duplicate names");
-
-            var columns = request.Columns.Select(x => new Column(x, DateTime.UtcNow, DateTime.UtcNow)).ToList();
+            
+            var now = DateTime.UtcNow;
+            var columns = request.Columns
+                .Select((name, index) => new Column(name, now.AddMilliseconds(index), now.AddMilliseconds(index)))
+                .ToList();
             var board = new Board(request.KanbanId, request.Name, DateTime.UtcNow, DateTime.UtcNow);
             board.Columns = columns;
 
@@ -95,7 +103,7 @@ namespace KanbanApp.Services
             EditBoardColumns(board, request.Columns);
 
             await kanbanContext.SaveChangesAsync();
-            board.Columns = board.Columns.OrderBy(x => x.LastModifiedAt).ToList();
+            board.Columns = board.Columns.OrderBy(x => x.CreatedAt).ToList();
             return board;
         }
 
@@ -105,6 +113,9 @@ namespace KanbanApp.Services
 
             if (columnNames.Count != columnNames.Distinct().Count())
                 throw new ArgumentException("Columns cannot have duplicate names");
+            
+            var newColumnBaseTime = DateTime.UtcNow;
+            var newColumnIndex = 0;
 
             foreach (var column in columns)
             {
@@ -124,8 +135,9 @@ namespace KanbanApp.Services
                         continue;
                     }
                 }
-                
-                var newColumn = new Column(column.Name, DateTime.UtcNow, DateTime.UtcNow);
+
+                var createdAt = newColumnBaseTime.AddMilliseconds(newColumnIndex++);
+                var newColumn = new Column(column.Name, createdAt, createdAt);
                 board.Columns.Add(newColumn);
             }
         }
